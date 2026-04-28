@@ -49,7 +49,7 @@
 
 ---
 
-## 🎯 핵심 기능 (당신의 구현)
+## 🎯 핵심 기능
 
 ### 1️⃣ 🎟️ 티켓 판매 시스템
 
@@ -112,7 +112,7 @@ if (totalReservedSeats + seatNumbers.length > 2) {
 
 ---
 
-### 2️⃣ 🏢 공간 대여 시스템 (당신의 핵심 구현!)
+### 2️⃣ 🏢 공간 대여 시스템
 
 #### 공간 목록 페이지 (SpaceRental.jsx)
 - 모든 공간 리스트 조회 (4열 그리드)
@@ -126,7 +126,7 @@ if (totalReservedSeats + seatNumbers.length > 2) {
 - 찜하기 기능
 - 예약하기 버튼
 
-#### 날짜/시간 선택 페이지 (RentalSelection.jsx) **【당신의 핵심】**
+#### 날짜/시간 선택 페이지 (RentalSelection.jsx)
 
 **시간 충돌 방지 로직:**
 ```javascript
