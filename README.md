@@ -74,7 +74,7 @@ Front_ShowU/src/
 │   │           └── payment/
 │   │               ├── mdPayment/
 │   │               └── mdTossPayment/
-│   └── vod/                # VOD 스트리밍 (팀원)
+│   └── vod/                # VOD 스트리밍
 └── routes/
     └── router.js
 ```
