@@ -15,13 +15,12 @@ const MdPaymentDetail = () => {
     userPhone = "",
     product = {},
     quantity = 0,
-    name = "",
     totalAmount = 0,
     address = "",
-    deliveryMessage = "", // 배송 메시지 추가
+    deliveryMessage = "",
   } = state;
 
-  const { currentUser } = useSelector((state) => state.user); // Redux에서 currentUser 가져오기
+  const { currentUser } = useSelector((state) => state.user);
   const userId = currentUser ? currentUser._id : null;
 
   useEffect(() => {
@@ -32,50 +31,79 @@ const MdPaymentDetail = () => {
 
   const { mdName } = product;
 
-  console.log("MdPaymentDetail 데이터:", {
-    userName,
-    userEmail,
-    userPhone,
-    product,
-    quantity,
-    name,
-    totalAmount,
-    address,
-    deliveryMessage, // 배송 메시지 로그 추가
-    userId, // userId 로그 추가
-  });
-
-  const handlePaymentSuccess = () => {
-    navigate("/shop/md/payment/toss-payment/success");
-  };
-
   return (
     <S.Container>
-      <S.Details>
-        <p>상품 이름: {mdName}</p>
-        {totalAmount !== undefined && (
-          <p>가격: {totalAmount.toLocaleString()} 원</p>
-        )}
-        <p>수량: {quantity}</p>
-        <p>사용자 이름: {userName}</p>
-        <p>이메일: {userEmail}</p>
-        <p>휴대전화: {userPhone}</p>
-        <p>주소: {address}</p>
-        <p>배송 메시지: {deliveryMessage}</p> {/* 배송 메시지 표시 */}
-      </S.Details>
-      <PaymentButton
-        productPrice={totalAmount}
-        orderName={mdName}
-        productId={product._id}
-        quantity={quantity}
-        userName={userName}
-        userEmail={userEmail}
-        userPhone={userPhone}
-        address={address}
-        deliveryMessage={deliveryMessage}
-        userId={userId} // userId 전달
-        onPaymentSuccess={handlePaymentSuccess}
-      />
+      <S.Wrap>
+        <S.Header>
+          <S.HeaderIcon>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ffd400" strokeWidth="2">
+              <rect x="2" y="5" width="20" height="14" rx="2" />
+              <line x1="2" y1="10" x2="22" y2="10" />
+            </svg>
+          </S.HeaderIcon>
+          <div>
+            <S.HeaderTitle>결제 정보 확인</S.HeaderTitle>
+            <S.HeaderSub>주문 내용을 확인하고 결제를 진행해주세요</S.HeaderSub>
+          </div>
+        </S.Header>
+
+        <S.Body>
+          <S.SectionTitle>상품 정보</S.SectionTitle>
+          <S.InfoGrid>
+            <S.InfoItem style={{ gridColumn: "1 / -1" }}>
+              <S.InfoItemLabel>상품 이름</S.InfoItemLabel>
+              <S.InfoItemValue style={{ fontSize: "15px", color: "#ffd400" }}>
+                {mdName}
+              </S.InfoItemValue>
+            </S.InfoItem>
+            <S.InfoItem>
+              <S.InfoItemLabel>수량</S.InfoItemLabel>
+              <S.InfoItemValue>{quantity}개</S.InfoItemValue>
+            </S.InfoItem>
+            <S.InfoItem>
+              <S.InfoItemLabel>주문자</S.InfoItemLabel>
+              <S.InfoItemValue>{userName}</S.InfoItemValue>
+            </S.InfoItem>
+            <S.InfoItem>
+              <S.InfoItemLabel>이메일</S.InfoItemLabel>
+              <S.InfoItemValue style={{ fontSize: "12px" }}>{userEmail}</S.InfoItemValue>
+            </S.InfoItem>
+            <S.InfoItem>
+              <S.InfoItemLabel>휴대전화</S.InfoItemLabel>
+              <S.InfoItemValue>{userPhone}</S.InfoItemValue>
+            </S.InfoItem>
+            <S.InfoItem style={{ gridColumn: "1 / -1" }}>
+              <S.InfoItemLabel>배송지</S.InfoItemLabel>
+              <S.InfoItemValue>{address}</S.InfoItemValue>
+            </S.InfoItem>
+            {deliveryMessage && (
+              <S.InfoItem style={{ gridColumn: "1 / -1" }}>
+                <S.InfoItemLabel>배송 메시지</S.InfoItemLabel>
+                <S.InfoItemValue>{deliveryMessage}</S.InfoItemValue>
+              </S.InfoItem>
+            )}
+          </S.InfoGrid>
+
+          <S.PriceRow>
+            <S.PriceLabel>최종 결제 금액</S.PriceLabel>
+            <S.PriceValue>{totalAmount.toLocaleString()}원</S.PriceValue>
+          </S.PriceRow>
+
+          <PaymentButton
+            productPrice={totalAmount}
+            orderName={mdName}
+            productId={product._id}
+            quantity={quantity}
+            userName={userName}
+            userEmail={userEmail}
+            userPhone={userPhone}
+            address={address}
+            deliveryMessage={deliveryMessage}
+            userId={userId}
+            onPaymentSuccess={() => navigate("/shop/md/payment/toss-payment/success")}
+          />
+        </S.Body>
+      </S.Wrap>
     </S.Container>
   );
 };

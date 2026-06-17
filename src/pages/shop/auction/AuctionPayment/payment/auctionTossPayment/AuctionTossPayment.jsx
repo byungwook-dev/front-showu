@@ -19,6 +19,7 @@ const AuctionTossPayment = ({
   onPaymentSuccess,
 }) => {
   const [widgets, setWidgets] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function fetchPaymentWidgets() {
@@ -32,8 +33,7 @@ const AuctionTossPayment = ({
   useEffect(() => {
     async function renderPaymentWidgets() {
       if (widgets == null) return;
-      const amount = { currency: "KRW", value: productPrice };
-      await widgets.setAmount(amount);
+      await widgets.setAmount({ currency: "KRW", value: productPrice });
       await Promise.all([
         widgets.renderPaymentMethods({
           selector: "#payment-method",
@@ -48,129 +48,22 @@ const AuctionTossPayment = ({
     renderPaymentWidgets();
   }, [widgets, productPrice]);
 
-  const navigate = useNavigate();
-
-  const handlePaymentSuccess = async (paymentKey, orderId) => {
-    console.log("handlePaymentSuccess 데이터:", {
-      paymentKey,
-      orderId,
-      amount: productPrice,
-      orderName,
-      productId,
-      quantity,
-      userName,
-      userEmail,
-      userPhone,
-      address,
-      deliveryMessage,
-    });
-
-    try {
-      const response = await fetch(
-        "http://localhost:8000/shop/auction/payment/toss-payment",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            paymentKey,
-            orderId,
-            amount: productPrice,
-            orderName,
-            productId,
-            quantity,
-            userName,
-            userEmail,
-            userPhone,
-            address,
-            deliveryMessage,
-          }),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("결제 확인 중 오류 발생");
-      }
-
-      console.log("결제 확인 성공 데이터:", await response.json());
-
-      navigate(
-        `/shop/auction/payment/toss-payment/success?paymentKey=${encodeURIComponent(
-          paymentKey
-        )}&orderId=${encodeURIComponent(orderId)}&amount=${encodeURIComponent(
-          productPrice
-        )}&orderName=${encodeURIComponent(
-          orderName
-        )}&productId=${encodeURIComponent(
-          productId
-        )}&quantity=${encodeURIComponent(
-          quantity
-        )}&userName=${encodeURIComponent(
-          userName
-        )}&userEmail=${encodeURIComponent(
-          userEmail
-        )}&userPhone=${encodeURIComponent(
-          userPhone
-        )}&address=${encodeURIComponent(
-          address
-        )}&deliveryMessage=${encodeURIComponent(deliveryMessage)}`
-      );
-      if (onPaymentSuccess) onPaymentSuccess();
-    } catch (error) {
-      console.error("결제 확인 중 오류 발생:", error);
-      navigate("/shop/auction/payment/toss-payment/failed");
-    }
-  };
-
   const handlePaymentRequest = async () => {
     try {
-      const paymentKey = generateRandomString();
       const orderId = generateRandomString();
-      const successUrl = `${
-        window.location.origin
-      }/shop/auction/payment/toss-payment/success?paymentKey=${encodeURIComponent(
-        paymentKey
-      )}&orderId=${encodeURIComponent(orderId)}&amount=${encodeURIComponent(
-        productPrice
-      )}&orderName=${encodeURIComponent(
-        orderName
-      )}&productId=${encodeURIComponent(
-        productId
-      )}&quantity=${encodeURIComponent(quantity)}&userName=${encodeURIComponent(
-        userName
-      )}&userEmail=${encodeURIComponent(
-        userEmail
-      )}&userPhone=${encodeURIComponent(
-        userPhone
-      )}&address=${encodeURIComponent(
-        address
-      )}&deliveryMessage=${encodeURIComponent(deliveryMessage)}`;
+
+      const successUrl = `${window.location.origin}/shop/auction/payment/toss-payment/success?orderId=${encodeURIComponent(orderId)}&amount=${encodeURIComponent(productPrice)}&orderName=${encodeURIComponent(orderName)}&productId=${encodeURIComponent(productId)}&quantity=${encodeURIComponent(quantity)}&userName=${encodeURIComponent(userName)}&userEmail=${encodeURIComponent(userEmail)}&userPhone=${encodeURIComponent(userPhone)}&address=${encodeURIComponent(address)}&deliveryMessage=${encodeURIComponent(deliveryMessage)}`;
       const failUrl = `${window.location.origin}/shop/auction/payment/toss-payment/failed`;
 
-      console.log("결제 요청 데이터:", {
-        paymentKey,
-        orderId,
-        amount: productPrice,
-        orderName,
-        productId,
-        quantity,
-        userName,
-        userEmail,
-        userPhone,
-        address,
-        deliveryMessage,
-      });
-
       await widgets?.requestPayment({
-        orderId: orderId,
+        orderId,
         orderName,
         successUrl,
         failUrl,
       });
-
-      handlePaymentSuccess(paymentKey, orderId);
     } catch (error) {
       console.error("결제 오류:", error);
-      alert("결제 중 오류가 발생했습니다.");
+      navigate("/shop/auction/payment/toss-payment/failed");
     }
   };
 

@@ -90,7 +90,7 @@ const MdPayment = () => {
         throw new Error(errorData.message || "결제 생성 중 오류 발생");
       }
 
-      alert("결제가 완료되었습니다!");
+      // alert("결제가 완료되었습니다!");
 
       navigate("/shop/md/payment/toss", {
         state: {

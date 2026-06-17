@@ -4,20 +4,22 @@ const S = {};
 
 S.TossPayButton = styled.button`
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
   background-color: #ffd400;
-  color: black;
-  width: 250px;
-  height: 50px;
+  color: #000;
+  width: 100%;
+  height: 52px;
   text-align: center;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: ${({ theme }) => theme.FONT_SIZE.h5};
   font-weight: ${({ theme }) => theme.FONT_WEIGHT.bold};
-  margin-top: 20px;
-  margin-left: 30px;
   cursor: pointer;
+
+  &:hover {
+    background-color: #ffca00;
+  }
 `;
 
 export default S;

@@ -232,12 +232,6 @@ const RentalDetail = () => {
             <S.HorizontalLine />
           </div>
 
-          <div ref={locationRef} style={{ width: "800px" }}>
-            <S.SubTitle>위치</S.SubTitle>
-            <S.DetailText>API</S.DetailText>
-            <S.HorizontalLine />
-          </div>
-
           <div ref={refundRef} style={{ width: "800px" }}>
             <S.SubTitle>환불규정</S.SubTitle>
             <S.DetailText>

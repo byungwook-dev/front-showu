@@ -85,7 +85,7 @@ const Reservation = () => {
         <S.ViewAllButton
           onClick={() => navigate("/reservation/Performing-show")}
         >
-          상영 중인 공연 전체보기
+          상연 중인 공연 전체보기
         </S.ViewAllButton>
       </S.CurrentlyPerforming>
     </S.MainContainer>

@@ -17,6 +17,7 @@ const TossPayment = ({
   onPaymentSuccess,
 }) => {
   const [widgets, setWidgets] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function fetchPaymentWidgets() {
@@ -30,8 +31,7 @@ const TossPayment = ({
   useEffect(() => {
     async function renderPaymentWidgets() {
       if (widgets == null) return;
-      const amount = { currency: "KRW", value: productPrice };
-      await widgets.setAmount(amount);
+      await widgets.setAmount({ currency: "KRW", value: productPrice });
       await Promise.all([
         widgets.renderPaymentMethods({
           selector: "#payment-method",
@@ -46,92 +46,24 @@ const TossPayment = ({
     renderPaymentWidgets();
   }, [widgets, productPrice]);
 
-  const navigate = useNavigate();
-
-  const handlePaymentSuccess = async (paymentKey, orderId) => {
-    console.log("handlePaymentSuccess 데이터:", {
-      paymentKey,
-      orderId,
-      amount: productPrice,
-      orderName,
-      showId,
-      date,
-      time,
-      seatNumbers,
-      userId,
-    });
-
-    try {
-      const response = await fetch("http://localhost:8000/reservation/toss", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          paymentKey,
-          orderId,
-          amount: productPrice,
-          orderName,
-          showId,
-          date,
-          time,
-          seatNumbers,
-          userId,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error("결제 확인 중 오류 발생");
-      }
-
-      console.log("결제 확인 성공 데이터:", await response.json());
-
-      navigate(
-        `/reservation/toss-payment/success?paymentKey=${encodeURIComponent(
-          paymentKey
-        )}&orderId=${orderId}`
-      );
-      if (onPaymentSuccess) onPaymentSuccess();
-    } catch (error) {
-      console.error("결제 확인 중 오류 발생:", error);
-      navigate("/reservation/toss-payment/failed");
-    }
-  };
-
   const handlePaymentRequest = async () => {
     try {
-      const paymentKey = generateRandomString();
       const orderId = generateRandomString();
-      const successUrl = `${
-        window.location.origin
-      }/reservation/toss-payment/success?paymentKey=${paymentKey}&orderId=${orderId}&amount=${productPrice}&orderName=${encodeURIComponent(
-        orderName
-      )}&showId=${showId}&date=${date}&time=${time}&seatNumbers=${encodeURIComponent(
-        JSON.stringify(seatNumbers)
-      )}&userId=${userId}`;
+
+      // successUrl에 결제 데이터 포함 (Toss가 실제 paymentKey를 붙여서 리다이렉트)
+      const successUrl = `${window.location.origin}/reservation/toss-payment/success?orderName=${encodeURIComponent(orderName)}&showId=${showId}&date=${date}&time=${time}&seatNumbers=${encodeURIComponent(JSON.stringify(seatNumbers))}&userId=${userId}`;
       const failUrl = `${window.location.origin}/reservation/toss-payment/failed`;
-
-      console.log("결제 요청 데이터:", {
-        paymentKey,
-        orderId,
-        amount: productPrice,
-        orderName,
-        showId,
-        date,
-        time,
-        seatNumbers,
-        userId,
-      });
-
+      // requestPayment 호출 후 Toss가 successUrl로 리다이렉트
+      // 이 함수는 리다이렉트이므로 아래 코드는 실행되지 않음
       await widgets?.requestPayment({
-        orderId: orderId,
+        orderId,
         orderName,
         successUrl,
         failUrl,
       });
-
-      handlePaymentSuccess(paymentKey, orderId);
     } catch (error) {
       console.error("결제 오류:", error);
-      alert("결제 중 오류가 발생했습니다.");
+      navigate("/reservation/toss-payment/failed");
     }
   };
 

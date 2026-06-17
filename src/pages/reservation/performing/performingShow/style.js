@@ -38,7 +38,7 @@ S.CurrentlyPerforming = styled.div`
 S.PerformingBoxContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(5, 1fr); // 5열로 설정
-  grid-gap: 20px;
+  grid-gap: 70px;
   justify-content: center;
   align-items: center;
   margin-bottom: 200px;
@@ -50,10 +50,10 @@ S.PerformingBox = styled.div`
   flex-direction: column;
   align-items: center;
   width: 180px;
-  height: 220px;
+  height: auto;
   margin: 10px;
-  margin-bottom: 200px;
-  background-color: white;
+  /* margin-bottom: 200px; */
+  background-color: black;
   border-radius: 5px;
 
   h3,
@@ -74,8 +74,10 @@ S.PerformingBox = styled.div`
 // 현재 공연 중 이미지 스타일
 S.PerformingImage = styled.img`
   width: 180px;
-  height: 400px;
+  height: 260px;
   border-radius: 5px;
+  object-fit: cover;
+  object-position: center top;
 `;
 
 export default S;
